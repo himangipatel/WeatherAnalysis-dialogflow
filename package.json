@@ -1,0 +1,22 @@
+{
+  "name": "video",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "actions-on-google": "^2.0.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "dialogflow": "^0.6.0",
+    "dialogflow-fulfillment": "^0.5.0",
+    "express": "~4.16.0",
+    "firebase-admin": "^4.2.1",
+    "firebase-functions": "^0.5.7",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "mongodb": "^3.3.0-beta2",
+    "morgan": "~1.9.0"
+  }
+}
