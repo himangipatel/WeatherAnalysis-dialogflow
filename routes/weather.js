@@ -1,33 +1,47 @@
+'use strict';
+
+
 var express = require('express');
 var axios = require('axios');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/MongoDatabase";
 const { dialogflow, SignIn, Image } = require('actions-on-google');
-const functions = require('firebase-functions');
+var ManagementClient = require('auth0').ManagementClient;
 
-const app = dialogflow({ debug: true, clientId: '5da2282196bb4243ba3bfa7f70af0369' });
+var management = new ManagementClient({
+  domain: 'dev-v88rgjw5.auth0.com',
+  clientId: '5ig3Hwgxi0d1D6XfOl7gOeCTIq3ncwx8',
+  clientSecret: 'G0glkshDsVn6FuoQkRxFc_NDwb0eJJRpjGjB2nQn1vUQ0SXJ82TBNorgYG-YY8JH'
+});
+
+
+const app = dialogflow({
+  clientId: '5ig3Hwgxi0d1D6XfOl7gOeCTIq3ncwx8',
+  debug: true
+});
 
 router.post('/', function (req, res, next) {
+  console.log(req.body.originalDetectIntentRequest.payload.user.accessToken)
+  console.log("Header------------------------>>>"+req);
+  let message = 'I got your account details. your accessToken is ' + 
+  req.body.originalDetectIntentRequest.payload.user.accessToken + ' What do you want to do next?'
+  res.send(createTextResponse(message));
+  management
+    .getUsers()
+    .then(function (users) {
+      console.log(users);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
   // handleWeatherReq(req, res, next)
-
-
-  console.log("Action called...........!!!")
-  app.intent('Default Welcome Intent', (conv) => {
-    conv.ask('Hi, how is it going?');
-    conv.ask(`Here's a picture of a cat`);
-    conv.ask(new Image({
-      url: 'https://developers.google.com/web/fundamentals/accessibility/semantics-builtin/imgs/160204193356-01-cat-500.jpg',
-      alt: 'A cat',
-    }));
-    conv.ask(new SignIn('To get your account details'));
-
-  });
 
 });
 
 
 async function handleWeatherReq(req, res, next) {
+
   var body = await req.body.queryResult;
 
   var intentType = body.intent.displayName;
@@ -65,23 +79,26 @@ async function handleWeatherReq(req, res, next) {
     case 'developerName':
       res.send(createTextResponse('Himangi Patel'));
       break
+    default:
+      res.send(createTextResponse('Default Action Response'));
+      break
 
   }
 
 
 }
 
-function fetchCitiesFromDb(res, cityName) {
+function fetchCitiesFromDb(res, stateName) {
 
-  if (cityName) {
+  if (stateName) {
     try {
       MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("MongoDatabase");
 
-        console.log("City name : ----------" + cityName)
+        console.log("State name : ----------" + stateName)
         // let cityName = "Gujarat";
-        dbo.collection("cities").find({ state: cityName }).toArray(function (err, result) {
+        dbo.collection("cities").find({ state: stateName }).toArray(function (err, result) {
           if (err) throw err;
           console.log(result);
           var i;
@@ -95,7 +112,7 @@ function fetchCitiesFromDb(res, cityName) {
           db.close();
         });
       });
-    } catch{
+    } catch (err) {
       var cities = 'Mumbai\nDelhi\nBangalore\nHyderabad\nAhmedabad\nChennai\nKolkata\nSurat\nPune\nJaipur\nCredencys Solutions'
       res.send(createTextResponse(cities));
     }
