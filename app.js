@@ -6,6 +6,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var weatherRouter = require('./routes/weather');
+var quizRouter = require('./routes/quiz');
+
 
 var app = express();
 
@@ -21,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/weather', weatherRouter);
+app.use('/quiz', quizRouter);
 
 
 // catch 404 and forward to error handler
@@ -37,6 +40,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+  console.log(err)
 });
 
 module.exports = app;

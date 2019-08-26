@@ -15,9 +15,11 @@
     "express": "~4.16.0",
     "firebase-admin": "^4.2.1",
     "firebase-functions": "^0.5.7",
+    "google-auth-library": "^5.1.1",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
     "mongodb": "^3.3.0-beta2",
+    "mongoose": "^5.6.8",
     "morgan": "~1.9.0"
   }
 }

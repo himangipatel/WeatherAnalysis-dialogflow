@@ -6,38 +6,12 @@ var axios = require('axios');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/MongoDatabase";
-const { dialogflow, SignIn, Image } = require('actions-on-google');
-var ManagementClient = require('auth0').ManagementClient;
 
-var management = new ManagementClient({
-  domain: 'dev-v88rgjw5.auth0.com',
-  clientId: '5ig3Hwgxi0d1D6XfOl7gOeCTIq3ncwx8',
-  clientSecret: 'G0glkshDsVn6FuoQkRxFc_NDwb0eJJRpjGjB2nQn1vUQ0SXJ82TBNorgYG-YY8JH'
-});
-
-
-const app = dialogflow({
-  clientId: '5ig3Hwgxi0d1D6XfOl7gOeCTIq3ncwx8',
-  debug: true
-});
 
 router.post('/', function (req, res, next) {
-  console.log(req.body.originalDetectIntentRequest.payload.user.accessToken)
-  console.log("Header------------------------>>>"+req);
-  let message = 'I got your account details. your accessToken is ' + 
-  req.body.originalDetectIntentRequest.payload.user.accessToken + ' What do you want to do next?'
-  res.send(createTextResponse(message));
-  management
-    .getUsers()
-    .then(function (users) {
-      console.log(users);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  // handleWeatherReq(req, res, next)
-
+  handleWeatherReq(req, res, next)
 });
+
 
 
 async function handleWeatherReq(req, res, next) {
